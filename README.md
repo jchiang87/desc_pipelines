@@ -18,4 +18,4 @@ The Strong Lensing pipeline diagram shown at the
 $ python sl_pipeline.py
 ```
 
-![SLPipeline DAG][/examples/SLPipeline.png]
+![SLPipeline DAG](/examples/SLPipeline.png)
