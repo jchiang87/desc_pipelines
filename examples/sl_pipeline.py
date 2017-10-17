@@ -1,3 +1,8 @@
+"""
+Strong Lensing pipeline example.  See
+
+https://confluence.slac.stanford.edu/display/LSSTDESC/Pipeline+design+session
+"""
 from desc.pipeline import Pipeline, ProcessingNode, DataProduct
 
 SLPipeline = Pipeline('Strong Lensing Pipeline')
@@ -28,17 +33,19 @@ SLENV = SLPipeline.add_processing_node('SLENV')
 wl_shapes = DataProduct('WL shapes')
 photo_zs = DataProduct('Photo-zs')
 cosmo_sims = DataProduct('Cosmo sims')
-SLENV.set_input(wl_shapes, photo_zs, cosmo_sims)
+SLENV.set_input(desc_lenses, wl_shapes, photo_zs, cosmo_sims)
 wl_params = DataProduct('WL parameters')
 SLENV.set_output(wl_params)
 
 SLModeler = SLPipeline.add_processing_node('SLModeler')
 follow_up_data = DataProduct('Follow-up data')
-SLModeler.set_input(sl_time_delays, follow_up_data)
+SLModeler.set_input(follow_up_data, wl_params)
 lens_models = DataProduct('Lens models')
 SLModeler.set_output(lens_models)
 
 SLCosmo = SLPipeline.add_processing_node('SLCosmo')
-SLCosmo.set_input(lens_models)
+SLCosmo.set_input(sl_time_delays, lens_models)
 sl_cosmo_params = DataProduct('SL cosmological parameters')
 SLCosmo.set_output(sl_cosmo_params)
+
+SLPipeline.write_dag('SLPipeline.png')
